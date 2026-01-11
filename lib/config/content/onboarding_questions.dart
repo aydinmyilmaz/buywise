@@ -1,0 +1,90 @@
+class OnboardingQuestions {
+  static const List<Map<String, dynamic>> questions = [
+    {
+      'id': 'ageGroup',
+      'type': 'single_select',
+      'title': 'What\'s your age group?',
+      'icon': '👤',
+      'options': ['18-24', '25-34', '35-44', '45-54', '55+'],
+    },
+    {
+      'id': 'country',
+      'type': 'text',
+      'title': 'Where do you live?',
+      'icon': '🌍',
+      'subtitle': 'Helps us understand spending norms in your area',
+    },
+    {
+      'id': 'spendingStyle',
+      'type': 'single_select',
+      'title': 'How would you describe your spending style?',
+      'icon': '💳',
+      'options': [
+        'Very careful - I think twice about every purchase',
+        'Thoughtful - I budget but allow treats',
+        'Balanced - I spend when I can afford it',
+        'Relaxed - money is meant to be enjoyed',
+      ],
+    },
+    {
+      'id': 'hasFunBudget',
+      'type': 'single_select',
+      'title': 'Do you set aside "fun money" for personal spending?',
+      'icon': '🎯',
+      'options': [
+        'Yes, I have a specific amount',
+        'Sort of - I have a rough idea',
+        'No, I decide case by case',
+      ],
+    },
+    {
+      'id': 'spendingGuilt',
+      'type': 'single_select',
+      'title': 'When you buy something for yourself, how do you usually feel?',
+      'icon': '💭',
+      'options': [
+        'Guilty - even when I can afford it',
+        'Anxious - I worry about "what ifs"',
+        'Mixed - happy but slightly guilty',
+        'Good - I deserve nice things',
+      ],
+    },
+    {
+      'id': 'lastSelfPurchase',
+      'type': 'single_select',
+      'title': 'When did you last buy something purely for yourself?',
+      'icon': '🎁',
+      'options': [
+        'This week',
+        'This month',
+        'A few months ago',
+        '6+ months ago',
+        'I honestly can\'t remember',
+      ],
+    },
+    {
+      'id': 'decisionStyle',
+      'type': 'single_select',
+      'title': 'What\'s your usual approach to purchase decisions?',
+      'icon': '🤔',
+      'options': [
+        'I research extensively',
+        'I wait to see if I still want it',
+        'I check my budget, then decide',
+        'I often overthink and don\'t buy',
+      ],
+    },
+    {
+      'id': 'preferredWaitTime',
+      'type': 'single_select',
+      'title': 'How long do you usually wait before buying something non-essential?',
+      'icon': '⏰',
+      'options': [
+        'I decide same day',
+        '24-48 hours',
+        'About a week',
+        'A month or more',
+      ],
+    },
+  ];
+}
