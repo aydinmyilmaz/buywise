@@ -5,6 +5,7 @@ class UserProfile {
   final String ageGroup;
   final String spendingStyle;
   final String hasFunBudget;
+  final double? funBudgetAmount; // Monthly fun budget amount
   final String spendingGuilt;
   final String lastSelfPurchase;
   final String decisionStyle;
@@ -19,6 +20,7 @@ class UserProfile {
     required this.ageGroup,
     required this.spendingStyle,
     required this.hasFunBudget,
+    this.funBudgetAmount,
     required this.spendingGuilt,
     required this.lastSelfPurchase,
     required this.decisionStyle,
@@ -35,6 +37,7 @@ class UserProfile {
       'ageGroup': ageGroup,
       'spendingStyle': spendingStyle,
       'hasFunBudget': hasFunBudget,
+      'funBudgetAmount': funBudgetAmount,
       'spendingGuilt': spendingGuilt,
       'lastSelfPurchase': lastSelfPurchase,
       'decisionStyle': decisionStyle,
@@ -52,6 +55,9 @@ class UserProfile {
       ageGroup: map['ageGroup'] ?? '',
       spendingStyle: map['spendingStyle'] ?? '',
       hasFunBudget: map['hasFunBudget'] ?? '',
+      funBudgetAmount: map['funBudgetAmount'] != null
+          ? (map['funBudgetAmount'] as num).toDouble()
+          : null,
       spendingGuilt: map['spendingGuilt'] ?? '',
       lastSelfPurchase: map['lastSelfPurchase'] ?? '',
       decisionStyle: map['decisionStyle'] ?? '',
