@@ -211,7 +211,7 @@ class HomeScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  CurrencyFormatter.format(item.price, item.currency),
+                                  CurrencyFormatter.format(item.price, currency: item.currency),
                                   style: theme.textTheme.bodySmall,
                                 ),
                                 Text(
@@ -429,7 +429,7 @@ class _BudgetTrackerCard extends StatelessWidget {
                 ],
               ),
               Text(
-                CurrencyFormatter.format(budgetAmount, currency),
+                CurrencyFormatter.format(budgetAmount, currency: currency),
                 style: theme.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: theme.colorScheme.onSurface.withOpacity(0.6),
@@ -468,7 +468,7 @@ class _BudgetTrackerCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    CurrencyFormatter.format(spent, currency),
+                    CurrencyFormatter.format(spent, currency: currency),
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: isOverBudget ? Colors.red : Colors.green,
@@ -486,7 +486,7 @@ class _BudgetTrackerCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    CurrencyFormatter.format(remaining.abs(), currency),
+                    CurrencyFormatter.format(remaining.abs(), currency: currency),
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: isOverBudget

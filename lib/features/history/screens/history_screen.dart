@@ -51,7 +51,7 @@ class HistoryScreen extends StatelessWidget {
                     child: ListTile(
                       title: Text(item.productName),
                       subtitle: Text(
-                        '${CurrencyFormatter.format(item.price, item.currency)} • ${DateFormatter.friendly(item.createdAt)}',
+                        '${CurrencyFormatter.format(item.price, currency: item.currency)} • ${DateFormatter.friendly(item.createdAt)}',
                       ),
                       trailing: _DecisionBadge(decision: item.decision),
                     ),
@@ -149,7 +149,7 @@ class _InsightsCard extends StatelessWidget {
                 child: _InsightStat(
                   icon: '💰',
                   label: 'Money Saved',
-                  value: CurrencyFormatter.format(moneySaved, currency),
+                  value: CurrencyFormatter.format(moneySaved, currency: currency),
                 ),
               ),
             ],
