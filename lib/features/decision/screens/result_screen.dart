@@ -170,11 +170,89 @@ class _ResultScreenState extends State<ResultScreen> with SingleTickerProviderSt
   }
 
   void _shareResult(purchase, result) {
-    final shareText = '''
-🛍️ Should I Buy This? - Decision
+    // Show options dialog
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Share Decision'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('How would you like to share this?'),
+            const SizedBox(height: 16),
+            ListTile(
+              leading: const Icon(Icons.family_restroom, color: Colors.purple),
+              title: const Text('Family Justification'),
+              subtitle: const Text('Perfect for getting approval'),
+              onTap: () {
+                Navigator.pop(context);
+                _shareFamilyVersion(purchase, result);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.share, color: Colors.blue),
+              title: const Text('Quick Share'),
+              subtitle: const Text('Share decision summary'),
+              onTap: () {
+                Navigator.pop(context);
+                _shareQuickVersion(purchase, result);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.description, color: Colors.orange),
+              title: const Text('Detailed Report'),
+              subtitle: const Text('Full analysis with reasoning'),
+              onTap: () {
+                Navigator.pop(context);
+                _shareDetailedVersion(purchase, result);
+              },
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+        ],
+      ),
+    );
+  }
 
-Product: ${purchase.productName}
-Price: ${CurrencyFormatter.format(purchase.price, currency: purchase.currency)}
+  void _shareFamilyVersion(purchase, result) {
+    final decision = result.decision.toLowerCase();
+    final isApproved = decision == 'yes' || decision == 'leaning_yes';
+
+    final shareText = '''
+${isApproved ? '✅' : '⏸️'} Purchase Request
+
+Hi! I've been thinking about getting this and wanted to share my analysis with you:
+
+🛍️ Product: ${purchase.productName}
+💰 Price: ${CurrencyFormatter.format(purchase.price, currency: purchase.currency)}
+
+📊 AI Analysis Results:
+Decision: ${result.decision.toUpperCase().replaceAll('_', ' ')}
+
+💭 Summary:
+${result.headline}
+
+${result.message}
+
+${result.verdictReasoning != null ? '📝 Reasoning:\n${result.verdictReasoning}\n\n' : ''}${isApproved ? '✨ Why this makes sense:\n' : '⚠️ Concerns to consider:\n'}${result.pros != null && result.pros!.isNotEmpty ? '${result.pros!.map((p) => '• $p').join('\n')}\n\n' : ''}${!isApproved && result.cons != null ? '${result.cons!.map((c) => '• $c').join('\n')}\n\n' : ''}Let me know what you think!
+
+(Analyzed with BuyWise - AI-powered purchase decisions)
+    '''.trim();
+
+    Share.share(shareText);
+  }
+
+  void _shareQuickVersion(purchase, result) {
+    final shareText = '''
+🛍️ Purchase Decision
+
+${purchase.productName}
+${CurrencyFormatter.format(purchase.price, currency: purchase.currency)}
 
 Decision: ${result.decision.toUpperCase().replaceAll('_', ' ')}
 
@@ -182,7 +260,43 @@ ${result.headline}
 
 ${result.message}
 
-Made my decision with BuyWise - Your AI-powered purchase decision assistant!
+Made with BuyWise - Your AI spending coach
+    '''.trim();
+
+    Share.share(shareText);
+  }
+
+  void _shareDetailedVersion(purchase, result) {
+    final shareText = '''
+📊 DETAILED PURCHASE ANALYSIS
+
+Product: ${purchase.productName}
+Price: ${CurrencyFormatter.format(purchase.price, currency: purchase.currency)}
+Category: ${purchase.category}
+
+═══════════════════════
+
+🎯 DECISION: ${result.decision.toUpperCase().replaceAll('_', ' ')}
+
+${result.headline}
+
+${result.message}
+
+═══════════════════════
+
+💭 REASONING:
+${result.verdictReasoning ?? 'See summary above'}
+
+═══════════════════════
+
+${result.pros != null && result.pros!.isNotEmpty ? '✅ PROS:\n${result.pros!.map((p) => '• $p').join('\n')}\n\n═══════════════════════\n\n' : ''}${result.cons != null && result.cons!.isNotEmpty ? '⚠️ CONS:\n${result.cons!.map((c) => '• $c').join('\n')}\n\n═══════════════════════\n\n' : ''}💡 KEY INSIGHTS:
+${result.peerInsight}
+
+${result.longTermValue != null ? '\n📈 Long-term Value:\n${result.longTermValue}\n' : ''}
+═══════════════════════
+
+Analyzed by BuyWise - AI-powered purchase decision assistant
+Making confident, guilt-free spending choices
     '''.trim();
 
     Share.share(shareText);

@@ -61,10 +61,16 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
     _priceController = TextEditingController(text: _price == 0 ? '' : _price.toStringAsFixed(0));
     _currencyController = TextEditingController(text: widget.baseData?['currency'] ?? 'USD');
     _productNameController = TextEditingController(text: widget.baseData?['productName'] ?? '');
-    
+
+    // Initialize category from baseData if available, otherwise use default
+    if (widget.baseData != null && widget.baseData!['category'] != null) {
+      _category = widget.baseData!['category'];
+    } else {
+      _initDefaultOption('category', (val) => _category = val);
+    }
+
     // Safely initialize default options if they exist
     _initDefaultOption('wantDuration', (val) => _wantDuration = val);
-    _initDefaultOption('category', (val) => _category = val);
   }
 
   void _initDefaultOption(String id, Function(String) setter) {
@@ -86,7 +92,13 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
   List<Map<String, dynamic>> _buildQuestions() {
     final questions = <Map<String, dynamic>>[];
     for (final q in DecisionQuestions.coreQuestions) {
-      if (q['id'] == 'price' && _price > 0) continue; // Skip if already known
+      final id = q['id'];
+
+      // Skip questions if already answered in product input
+      if (id == 'productName' && _productNameController.text.isNotEmpty) continue;
+      if (id == 'price' && _price > 0) continue;
+      if (id == 'category' && _category.isNotEmpty && _category != 'Other') continue;
+
       questions.add(q);
     }
 
