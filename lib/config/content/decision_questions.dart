@@ -1,139 +1,209 @@
 class DecisionQuestions {
   static const List<Map<String, dynamic>> coreQuestions = [
     {
-      'id': 'price',
-      'type': 'currency',
-      'title': 'How much does it cost?',
-      'icon': '💰',
+      'id': 'productName',
+      'type': 'text',
+      'title': 'What are you thinking of buying?',
+      'placeholder': 'e.g., iPhone 16 Pro, Vintage Jacket...',
+      'icon': '🛍️',
       'required': true,
     },
     {
-      'id': 'wantDuration',
-      'type': 'single_select',
-      'title': 'How long have you been wanting this?',
-      'icon': '⏰',
-      'options': [
-        'Just discovered it today',
-        'A few days',
-        '1-2 weeks',
-        'About a month',
-        'Several months',
-        'Over a year',
-      ],
-    },
-    {
-      'id': 'reasons',
-      'type': 'multi_select',
-      'title': 'Why do you want this?',
-      'subtitle': 'Select all that apply',
-      'icon': '✨',
-      'options': [
-        'It will make me happy',
-        'It\'s practical / useful',
-        'It supports a hobby',
-        'It\'s for self-care',
-        'It will save me time',
-        'Upgrade from what I have',
-        'Social pressure / everyone has it',
-        'It\'s on sale',
-        'No specific reason - I just want it',
-      ],
-    },
-  ];
-
-  static const List<Map<String, dynamic>> conditionalQuestions = [
-    {
-      'id': 'additionalCosts',
-      'condition': {'field': 'price', 'operator': '>', 'value': 100},
-      'type': 'multi_select',
-      'title': 'Will this have additional costs?',
-      'icon': '💸',
-      'options': [
-        'Accessories needed',
-        'Maintenance / refills',
-        'Subscription fees',
-        'Insurance / warranty',
-        'None that I know of',
-      ],
-    },
-    {
-      'id': 'affordabilityLevel',
-      'condition': {'field': 'price', 'operator': '>', 'value': 200},
-      'type': 'single_select',
-      'title': 'Honestly, how comfortable is this purchase?',
-      'icon': '🏦',
-      'options': [
-        'Very - I could buy this 3+ times',
-        'Comfortable - I can afford it twice',
-        'Fine - I can afford it once',
-        'Stretch - but manageable',
-      ],
-    },
-    {
-      'id': 'usageFrequency',
-      'condition': {'field': 'price', 'operator': '>', 'value': 100},
-      'type': 'single_select',
-      'title': 'How often would you use this?',
-      'icon': '📅',
-      'options': [
-        'Daily',
-        'Several times a week',
-        'Weekly',
-        'A few times a month',
-        'Occasionally',
-      ],
-    },
-    {
-      'id': 'willingToWait',
-      'condition': {'field': 'wantDuration', 'operator': '==', 'value': 'Just discovered it today'},
-      'type': 'single_select',
-      'title': 'Would you be okay waiting a bit to decide?',
-      'icon': '⏳',
-      'options': [
-        'Yes, I\'ll wait 48 hours',
-        'Yes, I\'ll wait a week',
-        'I\'d rather decide now',
-        'It\'s on sale - need to decide quickly',
-      ],
-    },
-    {
-      'id': 'hasCheckedDeals',
-      'condition': {'field': 'price', 'operator': '>', 'value': 50},
-      'type': 'single_select',
-      'title': 'Have you checked for a better price?',
-      'icon': '🔍',
-      'options': [
-        'Yes, this is the best price',
-        'Not yet - I should look around',
-        'It\'s already on sale',
-      ],
-    },
-  ];
-
-  static const List<Map<String, dynamic>> manualEntryQuestions = [
-    {
-      'id': 'productName',
-      'type': 'text',
-      'title': 'What\'s the product?',
-      'placeholder': 'e.g., Dyson Airwrap, Nike Air Max 90...',
-      'icon': '📝',
+      'id': 'price',
+      'type': 'currency',
+      'title': 'How much is it?',
+      'icon': '🏷️',
       'required': true,
     },
     {
       'id': 'category',
       'type': 'single_select',
-      'title': 'What category is this?',
-      'icon': '🏷️',
+      'title': 'Which category does it fall into?',
+      'icon': '📂',
       'options': [
-        'Beauty & Self-care',
-        'Fashion & Accessories',
         'Tech & Gadgets',
-        'Home & Living',
-        'Health & Fitness',
-        'Hobbies & Entertainment',
-        'Travel & Experiences',
+        'Fashion & Apparel',
+        'Beauty & Self-Care',
+        'Home & Decor',
+        'Hobbies & Gaming',
+        'Travel & Experience',
+        'Dining & Social',
         'Other',
       ],
     },
+    {
+      'id': 'emotionalState',
+      'type': 'single_select',
+      'title': 'How are you feeling right now?',
+      'subtitle': 'Be honest—emotions drive 80% of purchases.',
+      'icon': '❤️',
+      'options': [
+        'Calm & Rational',
+        'Excited / Euphoric',
+        'Stressed / Anxious',
+        'Bored / Lonely',
+        'Sad / Down',
+        'Tired / Exhausted',
+        'Hungry (literally)',
+      ],
+    },
+    {
+      'id': 'wantDuration',
+      'type': 'single_select',
+      'title': 'How long have you been wanting this?',
+      'icon': '⏳',
+      'options': [
+        'Just saw it today (Impulse)',
+        'Thinking about it for 24 hours',
+        'A few days',
+        'Over a week',
+        'Over a month',
+        '6+ months (Long-term goal)',
+      ],
+    },
   ];
+
+  static const List<Map<String, dynamic>> conditionalQuestions = [
+    // MARKETING TACTICS CHECK
+    {
+      'id': 'marketingTactics',
+      'condition': {'field': 'wantDuration', 'operator': '==', 'value': 'Just saw it today (Impulse)'},
+      'type': 'multi_select',
+      'title': 'Is there any pressure to buy NOW?',
+      'subtitle': 'Marketing often creates false urgency.',
+      'icon': '📢',
+      'options': [
+        'Limited time offer / Countdown timer',
+        'Low stock warning ("Only 2 left!")',
+        'Flash sale / Black Friday',
+        'Influencer recommended it',
+        'Free shipping threshold',
+        'No, just my own desire',
+      ],
+    },
+
+    // UTILITY & SUBSTITUTION
+    {
+      'id': 'substitution',
+      'condition': {'field': 'price', 'operator': '>', 'value': 50},
+      'type': 'single_select',
+      'title': 'Do you already own something similar?',
+      'icon': '🔄',
+      'options': [
+        'Yes, and it works fine',
+        'Yes, but this is an upgrade',
+        'Yes, but I want variety',
+        'No, I have nothing like this',
+        'No, this replaces a broken item',
+      ],
+    },
+
+    // FINANCIAL IMPACT & OPPORTUNITY COST
+    {
+      'id': 'laborCost',
+      'condition': {'field': 'price', 'operator': '>', 'value': 100},
+      'type': 'single_select',
+      'title': 'Is it worth the work hours?',
+      'subtitle': 'Think about how much you earn per hour.',
+      'icon': '💼',
+      'options': [
+        'Yes, it\'s worth the grind',
+        'It feels expensive for the effort',
+        'I haven\'t thought about it that way',
+        'It\'s a gift / using savings',
+      ],
+    },
+    {
+      'id': 'opportunityCost',
+      'condition': {'field': 'price', 'operator': '>', 'value': 200},
+      'type': 'single_select',
+      'title': 'What else could you do with this money?',
+      'icon': '💸',
+      'options': [
+        'Invest it / Save for a bigger goal',
+        'Pay off debt',
+        'Experience/Trip with friends',
+        'Nothing specific',
+      ],
+    },
+
+    // SOCIAL INFLUENCE
+    {
+      'id': 'socialProof',
+      'condition': {'field': 'category', 'operator': 'in', 'value': ['Fashion & Apparel', 'Tech & Gadgets', 'Travel & Experience']},
+      'type': 'single_select',
+      'title': 'Who is this purchase really for?',
+      'icon': '👀',
+      'options': [
+        '100% for me and my utility',
+        'To impress others / fit in',
+        'To post on social media',
+        'A mix of me and others',
+      ],
+    },
+
+    // USAGE REALITY CHECK
+    {
+      'id': 'usageReality',
+      'condition': {'field': 'category', 'operator': '!=', 'value': 'Travel & Experience'},
+      'type': 'single_select',
+      'title': 'Where will this be in 6 months?',
+      'icon': '📅',
+      'options': [
+        'Used daily/weekly',
+        'Used occasionally',
+        'Gathering dust in a closet',
+        'Resold or given away',
+      ],
+    },
+    
+    // AFFORDABILITY - REFINED
+    {
+      'id': 'affordability',
+      'condition': {'field': 'price', 'operator': '>', 'value': 30},
+      'type': 'single_select',
+      'title': 'The Affordability Test',
+      'subtitle': 'Rule of thumb: If you can\'t buy it twice conveniently, you can\'t afford it once.',
+      'icon': '💳',
+      'options': [
+        '✅ Safe: I could buy 3 of these with cash right now',
+        '⚠️ Okay: I can pay in full, but it takes a chunk of cash',
+        '😨 Stretch: I\'d have to dip into emergency savings',
+        '🛑 Debt: putting it on credit / payment plan',
+      ],
+    },
+
+    // MENTAL WELLBEING
+    {
+      'id': 'postPurchaseFeel',
+      'condition': {'field': 'emotionalState', 'operator': 'in', 'value': ['Stressed / Anxious', 'Sad / Down', 'Bored / Lonely']},
+      'type': 'single_select',
+      'title': 'Will buying this fix your current mood?',
+      'icon': '🧠',
+      'options': [
+        'No, it\'s a temporary distraction',
+        'Maybe for a few hours',
+        'Yes, it solves the root problem',
+        'I don\'t know',
+      ],
+    },
+    
+    // FINAL CHECK
+    {
+      'id': 'waitRule',
+      'condition': {'field': 'wantDuration', 'operator': 'in', 'value': ['Just saw it today (Impulse)', 'Thinking about it for 24 hours']},
+      'type': 'single_select',
+      'title': 'The 72-Hour Rule Check',
+      'subtitle': 'Most impulses fade after 3 days. Can you wait?',
+      'icon': '🛑',
+      'options': [
+        'I will wait 72 hours to decide',
+        'I can\'t wait (Risk of regret)',
+        'I\'ve already waited enough',
+      ],
+    },
+  ];
+
+  // Manual entry questions are now merged into Core for smoother flow
+  static const List<Map<String, dynamic>> manualEntryQuestions = []; 
 }

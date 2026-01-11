@@ -19,6 +19,7 @@ import 'features/onboarding/screens/splash_screen.dart';
 import 'features/onboarding/screens/survey_screen.dart';
 import 'features/onboarding/screens/welcome_screen.dart';
 import 'features/settings/screens/settings_screen.dart';
+import 'features/settings/screens/edit_profile_screen.dart';
 
 class ShouldIBuyThisApp extends StatefulWidget {
   const ShouldIBuyThisApp({super.key});
@@ -47,6 +48,7 @@ class _ShouldIBuyThisAppState extends State<ShouldIBuyThisApp> {
         GoRoute(path: '/result', builder: (context, state) => const ResultScreen()),
         GoRoute(path: '/history', builder: (context, state) => const HistoryScreen()),
         GoRoute(path: '/settings', builder: (context, state) => const SettingsScreen()),
+        GoRoute(path: '/edit-profile', builder: (context, state) => const EditProfileScreen()),
       ],
     );
   }

@@ -69,13 +69,15 @@ class OpenAIService {
     Map<String, dynamic>? productFromImage,
   }) async {
     if (EnvConfig.openAIApiKey.isEmpty) {
-      return _fallbackDecision(purchaseData, mood);
+      return getFallbackDecision(purchaseData, mood);
     }
 
     final systemPrompt = SystemPrompt.build(
       gender: userProfile['gender'] ?? 'neutral',
       country: userProfile['country'] ?? 'United States',
       currency: userProfile['currency'] ?? 'USD',
+      monthlyIncome: userProfile['monthlyIncome'] ?? 'Unknown',
+      primaryGoal: userProfile['primaryGoal'] ?? 'Unknown',
     );
 
     final userPrompt = PromptBuilder.buildAnalysisPrompt(
@@ -111,7 +113,7 @@ class OpenAIService {
     throw Exception('OpenAI API Error: ${response.statusCode} - ${response.body}');
   }
 
-  static Map<String, dynamic> _fallbackDecision(Map<String, dynamic> purchaseData, String mood) {
+  static Map<String, dynamic> getFallbackDecision(Map<String, dynamic> purchaseData, String mood) {
     final price = (purchaseData['price'] ?? 0).toDouble();
     final currency = purchaseData['currency'] ?? 'USD';
     return {
@@ -119,6 +121,12 @@ class OpenAIService {
       'headline': price <= 100 ? 'Looks reasonable' : 'Sleep on it',
       'message':
           price <= 100 ? 'This seems like a fair treat. Make sure it fits your week.' : 'Give it a little time. A short pause can confirm it is worth it.',
+      'verdictReasoning': price <= 100
+          ? 'The price point is manageable and it seems to bring you joy.'
+          : 'The cost is significant enough to warrant a cooling-off period.',
+      'pros': ['Fits your budget', 'Supports your interests'],
+      'cons': ['Might be impulse', 'Could find a better deal later'],
+      'longTermValue': 'Likely to provide value if used regularly.',
       'costAnalysis': {
         'costPerUse': price > 0 ? '${(price / 20).toStringAsFixed(2)} per use over ~20 uses' : null,
         'trueCostNote': null,

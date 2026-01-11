@@ -16,37 +16,46 @@ class MoodScreen extends StatelessWidget {
     final theme = Theme.of(context);
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(SpacingTokens.lg),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.arrow_back),
-                    onPressed: () => context.pop(),
-                  ),
-                  const SizedBox(width: SpacingTokens.xs),
-                  Text(Strings.moodWaveEmoji, style: theme.textTheme.titleLarge),
-                ],
+        child: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(SpacingTokens.lg),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.arrow_back),
+                          onPressed: () => context.pop(),
+                        ),
+                        const SizedBox(width: SpacingTokens.xs),
+                        Text(Strings.moodWaveEmoji, style: theme.textTheme.titleLarge),
+                      ],
+                    ),
+                    const SizedBox(height: SpacingTokens.sm),
+                    Text(Strings.moodGreeting, style: theme.textTheme.headlineMedium),
+                    const SizedBox(height: SpacingTokens.xs),
+                    Text(Strings.moodPrompt, style: theme.textTheme.bodyLarge),
+                    const SizedBox(height: SpacingTokens.lg),
+                    MoodSelector(
+                      selectedId: decisionProvider.moodId,
+                      onSelect: (id) => context.read<DecisionProvider>().setMood(id),
+                    ),
+                    const SizedBox(height: SpacingTokens.xl), // Extra padding at bottom
+                  ],
+                ),
               ),
-              const SizedBox(height: SpacingTokens.sm),
-              Text(Strings.moodGreeting, style: theme.textTheme.headlineMedium),
-              const SizedBox(height: SpacingTokens.xs),
-              Text(Strings.moodPrompt, style: theme.textTheme.bodyLarge),
-              const SizedBox(height: SpacingTokens.lg),
-              MoodSelector(
-                selectedId: decisionProvider.moodId,
-                onSelect: (id) => context.read<DecisionProvider>().setMood(id),
-              ),
-              const Spacer(),
-              AppButton(
+            ),
+            Padding(
+              padding: const EdgeInsets.all(SpacingTokens.lg),
+              child: AppButton(
                 label: Strings.continueLabel,
                 onPressed: decisionProvider.moodId == null ? null : () => context.push('/product'),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

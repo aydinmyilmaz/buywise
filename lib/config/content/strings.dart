@@ -10,7 +10,6 @@ class Strings {
   static const analyze = 'Analyze with AI';
   static const startNewDecision = 'New Decision';
   static const history = 'Past Decisions';
-  static const settings = 'Settings';
 
   // Onboarding
   static const welcomeTitle = 'Welcome';
@@ -57,14 +56,23 @@ class Strings {
   static const questionsHeader = 'A few quick questions';
   static const questionsEmoji = '🛍️';
   static const analyzingTitle = 'Thinking it through';
+  static const analyzingSteps = [
+    'Understanding your situation...',
+    'Considering your financial style...',
+    'Checking what others do...',
+    'Calculating cost per use...',
+    'Preparing your insight...',
+  ];
   static const resultTitle = 'Your guidance';
   static const saveDecision = 'Save to history';
 
   // Settings
-  static const appearance = 'Appearance';
-  static const editProfile = 'Edit Profile';
-  static const clearData = 'Clear All Data';
-  static const confirm = 'Confirm';
+  static const String settings = 'Settings';
+  static const String appearance = 'Appearance';
+  static const String clearData = 'Clear Data';
+  static const String personalProfile = 'Personal Profile';
+  static const String appSettings = 'App Settings';
+  static const String analyzing = 'Analyzing...';
   static const themeSwitched = 'Theme updated';
 
   // Errors

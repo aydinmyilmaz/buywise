@@ -9,6 +9,8 @@ class UserProfile {
   final String lastSelfPurchase;
   final String decisionStyle;
   final String preferredWaitTime;
+  final String monthlyIncome;
+  final String primaryGoal;
 
   const UserProfile({
     required this.gender,
@@ -21,6 +23,8 @@ class UserProfile {
     required this.lastSelfPurchase,
     required this.decisionStyle,
     required this.preferredWaitTime,
+    required this.monthlyIncome,
+    required this.primaryGoal,
   });
 
   Map<String, dynamic> toMap() {
@@ -35,6 +39,8 @@ class UserProfile {
       'lastSelfPurchase': lastSelfPurchase,
       'decisionStyle': decisionStyle,
       'preferredWaitTime': preferredWaitTime,
+      'monthlyIncome': monthlyIncome,
+      'primaryGoal': primaryGoal,
     };
   }
 
@@ -50,6 +56,8 @@ class UserProfile {
       lastSelfPurchase: map['lastSelfPurchase'] ?? '',
       decisionStyle: map['decisionStyle'] ?? '',
       preferredWaitTime: map['preferredWaitTime'] ?? '',
+      monthlyIncome: map['monthlyIncome'] ?? '',
+      primaryGoal: map['primaryGoal'] ?? '',
     );
   }
 }

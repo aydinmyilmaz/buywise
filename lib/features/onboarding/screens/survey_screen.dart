@@ -82,13 +82,20 @@ class _SurveyScreenState extends State<SurveyScreen> {
   }
 
   Future<void> _save() async {
+    // Get country name from text field - accept any value (open-ended)
     final countryName = (_answers['country'] as String? ?? 'United States').trim();
-    final country = Countries.getByName(countryName) ?? Countries.list.last;
+    
+    // Try to find currency from predefined list, but don't require it
+    final countryData = Countries.getByName(countryName);
+    final currency = countryData?['currency'] ?? 'USD'; // Default to USD if not found
+    
     final profile = UserProfile(
       gender: widget.gender ?? 'neutral',
-      country: country['name']!,
-      currency: country['currency']!,
+      country: countryName, // Save whatever the user typed
+      currency: currency,
       ageGroup: _answers['ageGroup'] ?? '',
+      monthlyIncome: _answers['monthlyIncome'] ?? '',
+      primaryGoal: _answers['primaryGoal'] ?? '',
       spendingStyle: _answers['spendingStyle'] ?? '',
       hasFunBudget: _answers['hasFunBudget'] ?? '',
       spendingGuilt: _answers['spendingGuilt'] ?? '',
@@ -138,12 +145,14 @@ class _SurveyScreenState extends State<SurveyScreen> {
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: SpacingTokens.sm, vertical: SpacingTokens.xs),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: SpacingTokens.sm, vertical: SpacingTokens.xs),
                       decoration: BoxDecoration(
                         color: accent.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(999),
                       ),
-                      child: Text('${_index + 1}/${_questions.length}', style: theme.textTheme.bodyMedium),
+                      child: Text('${_index + 1}/${_questions.length}',
+                          style: theme.textTheme.bodyMedium),
                     ),
                   ],
                 ),
@@ -169,6 +178,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                       ),
                       selected: _answers[_questions[index]['id']],
                       onSelect: (value) => _setAnswer(_questions[index]['id'], value),
+                      onNext: _next,
                     ),
                   ),
                 ),
@@ -192,6 +202,7 @@ class _QuestionPage extends StatelessWidget {
   final TextEditingController controller;
   final dynamic selected;
   final ValueChanged<dynamic> onSelect;
+  final VoidCallback onNext;
 
   const _QuestionPage({
     super.key,
@@ -200,6 +211,7 @@ class _QuestionPage extends StatelessWidget {
     required this.controller,
     required this.selected,
     required this.onSelect,
+    required this.onNext,
   });
 
   @override
@@ -209,69 +221,147 @@ class _QuestionPage extends StatelessWidget {
     final icon = question['icon'] ?? '';
     final title = question['title'] ?? '';
     final subtitle = question['subtitle'];
-
-    return TweenAnimationBuilder<double>(
-      tween: Tween(begin: 0, end: 1),
-      duration: const Duration(milliseconds: 320),
-      curve: Curves.easeOutCubic,
-      builder: (context, value, child) {
-        return Opacity(
-          opacity: value,
-          child: Transform.translate(
-            offset: Offset(0, 20 * (1 - value)),
-            child: child,
-          ),
-        );
-      },
+    
+    return SingleChildScrollView(
       child: Container(
-        padding: const EdgeInsets.all(SpacingTokens.lg),
+        // Glassmorphism card container
+        padding: const EdgeInsets.all(SpacingTokens.xl),
         decoration: BoxDecoration(
-          color: theme.colorScheme.surface,
-          borderRadius: BorderRadius.circular(24),
+          color: Colors.white.withOpacity(0.65),
+          borderRadius: BorderRadius.circular(28),
+          border: Border.all(
+            color: Colors.white.withOpacity(0.4),
+            width: 1.5,
+          ),
           boxShadow: [
             BoxShadow(
-              color: accent.withOpacity(0.18),
-              blurRadius: 20,
-              offset: const Offset(0, 10),
+              color: accent.withOpacity(0.08),
+              blurRadius: 24,
+              offset: const Offset(0, 8),
+              spreadRadius: 0,
+            ),
+            BoxShadow(
+              color: Colors.black.withOpacity(0.04),
+              blurRadius: 16,
+              offset: const Offset(0, 4),
+              spreadRadius: 0,
             ),
           ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 240),
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: accent.withOpacity(0.16),
-                borderRadius: BorderRadius.circular(14),
-              ),
-              child: Text(icon.toString(), style: const TextStyle(fontSize: 22)),
+            // Icon Bubble
+            Container(
+               width: 72,
+               height: 72,
+               alignment: Alignment.center,
+               decoration: BoxDecoration(
+                 gradient: LinearGradient(
+                   colors: [
+                     accent.withOpacity(0.15),
+                     accent.withOpacity(0.08),
+                   ],
+                   begin: Alignment.topLeft,
+                   end: Alignment.bottomRight,
+                 ),
+                 shape: BoxShape.circle,
+                 border: Border.all(
+                   color: accent.withOpacity(0.25), 
+                   width: 2,
+                 ),
+                 boxShadow: [
+                   BoxShadow(
+                     color: accent.withOpacity(0.15),
+                     blurRadius: 12,
+                     offset: const Offset(0, 4),
+                   ),
+                 ],
+               ),
+               child: Text(icon.toString(), style: const TextStyle(fontSize: 36)),
             ),
-            const SizedBox(height: SpacingTokens.sm),
-            Text(title.toString(), style: theme.textTheme.headlineMedium),
-            if (subtitle != null) ...[
-              const SizedBox(height: SpacingTokens.xs),
-              Text(subtitle.toString(), style: theme.textTheme.bodyMedium),
-            ],
             const SizedBox(height: SpacingTokens.lg),
+            
+            // Title
+            Text(
+              title.toString(),
+              style: theme.textTheme.displaySmall?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: theme.colorScheme.onSurface,
+                height: 1.15,
+                letterSpacing: -0.5,
+              ),
+            ),
+            
+            if (subtitle != null) ...[ 
+              const SizedBox(height: SpacingTokens.sm),
+              Text(
+                subtitle.toString(),
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  color: theme.colorScheme.onSurface.withOpacity(0.65),
+                  height: 1.5,
+                  fontSize: 16,
+                ),
+              ),
+            ],
+            
+            const SizedBox(height: SpacingTokens.xl),
+            
+            // Options
             if (type == 'single_select')
               Wrap(
+                spacing: SpacingTokens.xs,
+                runSpacing: SpacingTokens.xs,
                 children: (question['options'] as List<dynamic>)
                     .map(
                       (option) => SelectOption(
                         label: option.toString(),
                         selected: selected == option,
-                        onTap: () => onSelect(option),
+                        onTap: () {
+                           onSelect(option);
+                           // Auto advance for single select
+                           Future.delayed(const Duration(milliseconds: 350), onNext);
+                        },
                       ),
                     )
                     .toList(),
               )
             else
-              TextField(
-                controller: controller,
-                decoration: InputDecoration(hintText: subtitle?.toString() ?? ''),
-                onChanged: (val) => onSelect(val),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextField(
+                    controller: controller,
+                    style: theme.textTheme.bodyLarge,
+                    decoration: InputDecoration(
+                      hintText: 'Type your answer...',
+                      filled: true,
+                      fillColor: theme.colorScheme.surface.withOpacity(0.8),
+                      contentPadding: const EdgeInsets.all(SpacingTokens.lg),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: BorderSide(color: theme.colorScheme.outline.withOpacity(0.5)),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: BorderSide(color: theme.colorScheme.outline.withOpacity(0.5)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: BorderSide(color: accent, width: 2),
+                      ),
+                    ),
+                    onChanged: (val) => onSelect(val),
+                    onSubmitted: (_) => onNext(),
+                  ),
+                  const SizedBox(height: SpacingTokens.sm),
+                  Text(
+                    'Press Return to continue',
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: theme.colorScheme.onSurface.withOpacity(0.4),
+                    ),
+                  ),
+                ],
               ),
           ],
         ),

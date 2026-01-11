@@ -9,6 +9,10 @@ class AIResponse {
   final Map<String, dynamic>? waitSuggestion;
   final String? emotionalNote;
   final List<String> actionItems;
+  final String? verdictReasoning;
+  final List<String>? pros;
+  final List<String>? cons;
+  final String? longTermValue;
 
   AIResponse({
     required this.decision,
@@ -21,6 +25,10 @@ class AIResponse {
     this.alternatives,
     this.waitSuggestion,
     this.emotionalNote,
+    this.verdictReasoning,
+    this.pros,
+    this.cons,
+    this.longTermValue,
   });
 
   factory AIResponse.fromMap(Map<String, dynamic> map) {
@@ -37,6 +45,10 @@ class AIResponse {
           : null,
       emotionalNote: map['emotionalNote'],
       actionItems: (map['actionItems'] as List?)?.map((e) => e.toString()).toList() ?? const [],
+      verdictReasoning: map['verdictReasoning'],
+      pros: (map['pros'] as List?)?.map((e) => e.toString()).toList(),
+      cons: (map['cons'] as List?)?.map((e) => e.toString()).toList(),
+      longTermValue: map['longTermValue'],
     );
   }
 }

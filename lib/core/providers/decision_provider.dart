@@ -69,7 +69,7 @@ class DecisionProvider extends ChangeNotifier {
       _result = AIResponse.fromMap(response);
     } catch (e) {
       debugPrint('Analysis error: $e');
-      _result = AIResponse.fromMap(_localFallback(_purchase!.toMap(), _moodId!));
+      _result = AIResponse.fromMap(OpenAIService.getFallbackDecision(_purchase!.toMap(), _moodId!));
     }
     _loading = false;
     notifyListeners();
@@ -86,29 +86,5 @@ class DecisionProvider extends ChangeNotifier {
 
   String generateDecisionId() => const Uuid().v4();
 
-  Map<String, dynamic> _localFallback(Map<String, dynamic> purchaseData, String mood) {
-    final price = (purchaseData['price'] ?? 0).toDouble();
-    return {
-      'decision': price <= 100 ? 'leaning_yes' : 'wait',
-      'headline': price <= 100 ? 'Looks reasonable' : 'Sleep on it',
-      'message': price <= 100
-          ? 'This seems like a fair treat. Make sure it fits your week.'
-          : 'Give it a little time. A short pause can confirm it is worth it.',
-      'costAnalysis': {
-        'costPerUse': price > 0 ? '${(price / 20).toStringAsFixed(2)} per use over ~20 uses' : null,
-        'trueCostNote': null,
-        'affordabilityNote': 'Based on a quick gut check.',
-      },
-      'peerInsight': 'Most people in your mood ($mood) weigh it against their week and budget.',
-      'mindsetNote': 'Trust your pace—no rush decisions.',
-      'alternatives': ['Wait 48 hours', 'Check a deal alert'],
-      'waitSuggestion': {
-        'shouldWait': price > 150,
-        'days': price > 150 ? 2 : 0,
-        'reason': 'Waiting helps curb impulse buys.'
-      },
-      'emotionalNote': 'Be kind to yourself—treats are okay when mindful.',
-      'actionItems': ['Double-check price fits your budget', 'Decide after a short walk'],
-    };
-  }
+
 }

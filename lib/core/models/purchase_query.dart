@@ -10,6 +10,10 @@ class PurchaseQuery {
   final String? usageFrequency;
   final String? willingToWait;
   final String? hasCheckedDeals;
+  final String? necessity;
+  final String? utility;
+  final String? sentiment;
+  final String? resaleValue;
 
   PurchaseQuery({
     required this.productName,
@@ -23,6 +27,10 @@ class PurchaseQuery {
     this.usageFrequency,
     this.willingToWait,
     this.hasCheckedDeals,
+    this.necessity,
+    this.utility,
+    this.sentiment,
+    this.resaleValue,
   });
 
   Map<String, dynamic> toMap() {
@@ -38,6 +46,10 @@ class PurchaseQuery {
       'usageFrequency': usageFrequency,
       'willingToWait': willingToWait,
       'hasCheckedDeals': hasCheckedDeals,
+      'necessity': necessity,
+      'utility': utility,
+      'sentiment': sentiment,
+      'resaleValue': resaleValue,
     };
   }
 }

@@ -60,6 +60,22 @@ class PromptBuilder {
       buffer.writeln('Deal Status: ${purchaseData['hasCheckedDeals']}');
     }
 
+    if (purchaseData['necessity'] != null) {
+      buffer.writeln('Necessity Level: ${purchaseData['necessity']}');
+    }
+
+    if (purchaseData['utility'] != null) {
+      buffer.writeln('Self-Reported Utility: ${purchaseData['utility']}');
+    }
+
+    if (purchaseData['sentiment'] != null) {
+      buffer.writeln('User Sentiment: ${purchaseData['sentiment']}');
+    }
+
+    if (purchaseData['resaleValue'] != null) {
+      buffer.writeln('Expected Resale Value: ${purchaseData['resaleValue']}');
+    }
+
     buffer.writeln('');
     buffer.writeln('Based on all this information, provide your analysis as JSON.');
 
