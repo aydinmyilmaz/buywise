@@ -19,6 +19,8 @@ class ThemeConfig {
 
     return ThemeData(
       useMaterial3: true,
+      fontFamily: TypographyTokens.fontFamily,
+      fontFamilyFallback: const ['NotoSans', 'NotoColorEmoji'],
       scaffoldBackgroundColor: background,
       primaryColor: primary,
       colorScheme: ColorScheme.light(
