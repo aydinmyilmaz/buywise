@@ -2,11 +2,13 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 import '../../../config/content/strings.dart';
 import '../../../config/theme/color_tokens.dart';
 import '../../../config/theme/spacing_tokens.dart';
 import '../../../core/providers/decision_provider.dart';
 import '../../../core/providers/history_provider.dart';
+import '../../../core/providers/pending_provider.dart';
 import '../../../core/utils/currency_formatter.dart';
 import '../../../shared/widgets/app_button.dart';
 import '../../../shared/widgets/atmosphere_background.dart';
@@ -61,6 +63,131 @@ class _ResultScreenState extends State<ResultScreen> with SingleTickerProviderSt
     }
   }
 
+  void _showReminderDialog(BuildContext context, purchase) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Set Reminder'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('When should we remind you to reconsider this purchase?'),
+            const SizedBox(height: 16),
+            ListTile(
+              title: const Text('48 hours'),
+              leading: const Icon(Icons.schedule),
+              onTap: () async {
+                await context.read<PendingProvider>().add(
+                  productName: purchase.productName,
+                  price: purchase.price,
+                  currency: purchase.currency,
+                  decision: 'wait',
+                  waitHours: 48,
+                );
+                if (!context.mounted) return;
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Reminder set for 48 hours'),
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              title: const Text('72 hours'),
+              leading: const Icon(Icons.schedule),
+              onTap: () async {
+                await context.read<PendingProvider>().add(
+                  productName: purchase.productName,
+                  price: purchase.price,
+                  currency: purchase.currency,
+                  decision: 'wait',
+                  waitHours: 72,
+                );
+                if (!context.mounted) return;
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Reminder set for 72 hours'),
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              title: const Text('7 days'),
+              leading: const Icon(Icons.schedule),
+              onTap: () async {
+                await context.read<PendingProvider>().add(
+                  productName: purchase.productName,
+                  price: purchase.price,
+                  currency: purchase.currency,
+                  decision: 'wait',
+                  waitHours: 168, // 7 days
+                );
+                if (!context.mounted) return;
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Reminder set for 7 days'),
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              title: const Text('30 days'),
+              leading: const Icon(Icons.schedule),
+              onTap: () async {
+                await context.read<PendingProvider>().add(
+                  productName: purchase.productName,
+                  price: purchase.price,
+                  currency: purchase.currency,
+                  decision: 'wait',
+                  waitHours: 720, // 30 days
+                );
+                if (!context.mounted) return;
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Reminder set for 30 days'),
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Cancel'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _shareResult(purchase, result) {
+    final shareText = '''
+🛍️ Should I Buy This? - Decision
+
+Product: ${purchase.productName}
+Price: ${CurrencyFormatter.format(purchase.price, currency: purchase.currency)}
+
+Decision: ${result.decision.toUpperCase().replaceAll('_', ' ')}
+
+${result.headline}
+
+${result.message}
+
+Made my decision with BuyWise - Your AI-powered purchase decision assistant!
+    '''.trim();
+
+    Share.share(shareText);
+  }
+
   @override
   Widget build(BuildContext context) {
     final decisionProvider = context.watch<DecisionProvider>();
@@ -97,9 +224,9 @@ class _ResultScreenState extends State<ResultScreen> with SingleTickerProviderSt
                           onPressed: () => context.go('/home'),
                         ),
                         Text('Your Insight', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
-                        const IconButton(
-                          icon: Icon(Icons.share_outlined), // Placeholder for share
-                          onPressed: null, 
+                        IconButton(
+                          icon: const Icon(Icons.share_outlined),
+                          onPressed: () => _shareResult(purchase, result),
                         ),
                       ],
                     ),
@@ -213,6 +340,15 @@ class _ResultScreenState extends State<ResultScreen> with SingleTickerProviderSt
                         ),
                         child: Column(
                           children: [
+                            // Show reminder button for wait decisions
+                            if (result.decision.toLowerCase() == 'wait' ||
+                                result.decision.toLowerCase() == 'leaning_no') ...[
+                              AppButton(
+                                label: 'Set Reminder',
+                                onPressed: () => _showReminderDialog(context, purchase),
+                              ),
+                              const SizedBox(height: SpacingTokens.xs),
+                            ],
                             AppButton(
                               label: 'Save Decision',
                               onPressed: () async {

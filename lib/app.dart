@@ -5,6 +5,7 @@ import 'config/app_config.dart';
 import 'config/theme/theme_config.dart';
 import 'core/providers/decision_provider.dart';
 import 'core/providers/history_provider.dart';
+import 'core/providers/pending_provider.dart';
 import 'core/providers/theme_provider.dart';
 import 'core/providers/user_provider.dart';
 import 'features/decision/screens/analyzing_screen.dart';
@@ -61,6 +62,7 @@ class _ShouldIBuyThisAppState extends State<ShouldIBuyThisApp> {
         ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => DecisionProvider()),
         ChangeNotifierProvider(create: (_) => HistoryProvider()),
+        ChangeNotifierProvider(create: (_) => PendingProvider()),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, _) => MaterialApp.router(
